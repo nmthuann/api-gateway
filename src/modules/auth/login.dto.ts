@@ -8,10 +8,18 @@ export class LoginUserDto {
     @IsNotEmpty()
     password: string;
 
-            toString(){
-            return JSON.stringify({
-                email: this.email,
-                password: this.password
-            })
-        }
+    // constructor(
+    //     email: string,
+    //     password: string,){}
+
+    toString(){
+        return JSON.stringify({
+            email: this.email,
+            password: this.password
+        })
+    }
 }
+
+/**
+ * test input đầu vào
+ */

@@ -3,7 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { ApiModule } from './modules/api/api.module';
+import { ApiGatewayModule} from './modules/api/api-gateway.module';
 
 @Module({
   imports: [
@@ -61,7 +61,7 @@ import { ApiModule } from './modules/api/api.module';
     //   }
     //   },
     // ]),
-   ApiModule],
+   ApiGatewayModule],
   controllers: [AppController],
   providers: [AppService,],// ConsumerService, ProducerService
 })
