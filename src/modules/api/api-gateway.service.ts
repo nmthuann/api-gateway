@@ -1,71 +1,40 @@
 import {  CACHE_MANAGER, Inject, Injectable} from '@nestjs/common';
-import { LoginUserDto } from '../auth/login.dto';
-import { ProducerService } from 'src/kafka/producer.service';
+import { LoginUserDto } from '../auth/auth-dto/login.dto';
+import { ProducerService } from 'src/modules/kafka/producer.service';
 import { Kafka, logLevel } from 'kafkajs';
-import { ConsumerService } from 'src/kafka/consumer.service';
+import { ConsumerService } from 'src/modules/kafka/consumer.service';
 import { Tokens } from 'src/common/bases/types/token.type';
-import { TokensDto } from '../auth/tokens.dto';
+import { TokensDto } from '../auth/auth-dto/tokens.dto';
 import { Cache } from 'cache-manager';
+// import { createClient } from 'redis';
 
 
 @Injectable()
 export class ApiGatewayService {
   constructor(
-    private producerService: ProducerService,
-    private consumerService: ConsumerService,
-    @Inject(CACHE_MANAGER) private cacheService: Cache) {}
+    @Inject(CACHE_MANAGER) private cacheService: Cache,
+    ) {}
 
-    async login(topic: string, message: LoginUserDto){//: Promise<Tokens>
-      await this.producerService.onModuleInit();
-        await this.producerService.produce({
-            topic: 'auth-login',
-            messages: [{value:message.toString()}],// có thể lỗi ở đây
-            timeout: 6000 //6ms*1000 = 6s
-        });
-        console.log('.....................ĐÃ SEND!');
-        // close connect producer
-        await this.producerService.onApplicationShutdown();
-
-        //************************************************************* */
-        
-        const output_Tokens = new Promise<TokensDto>((resolve) =>{
-        this.consumerService.consume(
-          'api-gateway',
-          {topic: topic},
-          {
-            eachMessage: async ({ message }) => {
-              const inputTokens = await JSON.parse(message.value.toString());
-              console.log('input tokens: ',inputTokens);
-              resolve(inputTokens);
-            }
-          }) 
-
-          // close connect consumer
-          this.consumerService.onApplicationShutdown();
-        })
-
-      await this.cacheService.set(message.email, (await output_Tokens).access_token, 60000 )
-      return output_Tokens;
+    async setDataInCaching() {
+      await this.cacheService.set('test', 'hello');
+      return true;
     }
 
-    // async saveAccessToken(token: string, expiresIn: number) {
-      
-    // //redisService.getClient().set(token, 'valid', 'EX', expiresIn);
-    // }
-
-    async getDataInCach(email: string): Promise<string> {
+    async getDataInCaching() {
+      return await this.cacheService.get('test');
+    }
+    
+    async getCacheUser(email: string) {
     // check if data is in cache:
-    const cachedData = await this.cacheService.get<{ access_Tokens: string }>(
-      email.toString(),
-    );
+    const cachedData = await this.cacheService.get(email);
     if (cachedData) {
       console.log(`Getting data from cache!`);
-      return `${cachedData.access_Tokens}`;
+      return `${cachedData} của ${email} da dang nhap`;
     }
-
-    return 'Khong ton tại';
+    else{
+       return  `${email} chua dang nhap`;
+    }   
   }
-  
 }
 
 
