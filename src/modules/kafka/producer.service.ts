@@ -22,6 +22,7 @@ export class ProducerService  { //implements OnModuleInit, OnApplicationShutdown
       console.log(`Message sent to topic ${record.topic}: ${JSON.stringify(record.messages)}`);
       return await this.producer.send(record);
     } catch (err) {
+      
       throw new Error(`Failed to send message to topic ${record.topic}: ${err.message}`);
     }
   }

@@ -49,7 +49,7 @@ export class ConsumerService  {//implements OnApplicationShutdown
 
   async handleMessage <T>(groupId: string, resTopic: string): Promise<T>{
     return new Promise<T>((resolve, reject) => {
-      try {
+      //try {
         this.consume(
           groupId,
           { topic: resTopic },
@@ -62,9 +62,9 @@ export class ConsumerService  {//implements OnApplicationShutdown
         );
         // close connect consumer
         this.shutdown();
-      } catch (error) {
-        reject(error);
-      }
+      // } catch (error) {
+      //   reject(error);
+      // }
     });
   }
    

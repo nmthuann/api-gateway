@@ -26,17 +26,17 @@ export class ApiGatewayAuthService {
   ) {}    
 
 
-  async login(resTopic: string, inputLogin: LoginUserDto): Promise<object>{
+  async login(resTopic: string, inputLogin: LoginUserDto){
     // publish a producer - send message to service
     await this.producerService.sendMessage('api-auth-login-req', inputLogin, 6000);
 
     // get access token
-    const tokens: Tokens = await this.consumerService.handleMessage<Tokens>('api-gateway', resTopic);
+    const tokens = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
 
     // set cache
     await this.cacheService.set(inputLogin.email, tokens.access_token);
 
-    return {access_token: tokens.access_token};
+    return tokens;
   }
 
 }
