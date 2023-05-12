@@ -3,7 +3,6 @@ import { ClientKafka } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { HttpService,  } from '@nestjs/axios';
-import { CreatePostDto } from './modules/posts/create-post.dto';
 
 @Injectable()
 export class AppService {

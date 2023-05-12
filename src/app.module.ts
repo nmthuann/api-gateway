@@ -3,9 +3,10 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { ApiGatewayModule} from './modules/api/api-gateway.module';
+import { ApiGatewayModule} from 'src/modules/apis/api-gateway.module';
 import * as redisStore from 'cache-manager-redis-store';
-import { ApiGatewayAuthModule } from './modules/auth/api-auth.module';
+import { ApiGatewayAuthModule } from 'src/modules/services/auth/api-auth.module'
+import { ApiGatewayUserModule } from './modules/services/users/api-user.module';
 
 @Module({
   imports: [
@@ -44,9 +45,11 @@ import { ApiGatewayAuthModule } from './modules/auth/api-auth.module';
       port: 6379,//6379
       // password: 'pqTtSGQM5oHvURGfFWaO7qWcTi3kcWr8',
       ttl: 60*15, // seconds
-    }), 
-    ApiGatewayAuthModule,
-   ApiGatewayModule],
+    }),
+    ApiGatewayModule,
+    // ApiGatewayAuthModule,
+    ApiGatewayUserModule,
+  ],
   controllers: [AppController],
   providers: [AppService,],
 })

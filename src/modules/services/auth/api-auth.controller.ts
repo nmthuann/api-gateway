@@ -5,37 +5,57 @@ Param,
 UseInterceptors,
 HttpCode,
 HttpStatus,
-NestMiddleware} from '@nestjs/common';
+NestMiddleware,
+ValidationPipe} from '@nestjs/common';
 import { Public } from 'src/common/decorators/public.decorator';
 import { ValidatorPipe } from 'src/common/pipes/validator.pipe';
-import { LoginUserDto } from './auth-dto/login.dto';
-import { Tokens } from 'src/common/bases/types/token.type';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+import { AccountDto } from './auth-dto/account.dto';
 import { ApiGatewayAuthService } from '../auth/api-auth.service';
-import { TransformPipe } from 'src/common/pipes/transform.pipe';
-import { CreateAccountUserDto } from './auth-dto/create-accountUser.dto';
-import { AuthenticationGuard } from 'src/common/guards/authentication.guard';
-import { RefreshGuard } from 'src/common/guards/refresh-token.guard';
-import { AuthenticationMiddleware } from 'src/common/middlewares/authentication.middleware';
-import { JwtService } from '@nestjs/jwt';
-import { RedisService } from '../redis/redis.service';
-import { NextFunction } from 'express';
+import { AccountPipeValidator } from 'src/common/pipes/account.validator.pipe';
 
 @Controller('auth')
 export class ApiGatewayAuthController {
   constructor(private readonly apiGatewayAuthService: ApiGatewayAuthService,
     // private readonly jwtService: JwtService,
     // private readonly redisService: RedisService
-    ) {}
+  ) {}
 
-  //handle login
   @Public()
   @Post('login')
-  @UsePipes(new ValidatorPipe())
-  async login(@Body() loginDto: LoginUserDto){
-    console.log(loginDto, "Đã vừa đăng nhập!")
+  @UsePipes(new AccountPipeValidator())
+  async login(@Body() loginDto: AccountDto){
+    console.log("Check account .... ", loginDto);
     return await this.apiGatewayAuthService.login('auth-api-login-res', loginDto);
   }
+
+
+  @Public()
+  @Post('regiter')
+  @UsePipes(new AccountPipeValidator())  // new TransformPipe()
+  async register(@Body() accountDto: AccountDto){
+    return await this.apiGatewayAuthService.register('auth-api-register-res', accountDto);
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // //fucntion register user
   // @Public()
@@ -79,6 +99,3 @@ export class ApiGatewayAuthController {
   //   console.log("You choose the forgetPassword func!")
   //   //return this.apiGatewayAuthService.forgetPassword('auth-api-forget-password-res', );
   // }
-
-
-}

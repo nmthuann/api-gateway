@@ -61,7 +61,7 @@ export class ConsumerService  {//implements OnApplicationShutdown
           }
         );
         // close connect consumer
-        this.shutdown();
+        // this.shutdown();
       // } catch (error) {
       //   reject(error);
       // }

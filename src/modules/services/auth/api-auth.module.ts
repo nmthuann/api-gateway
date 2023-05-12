@@ -6,7 +6,7 @@ import * as redisStore from 'cache-manager-redis-store';
 import { ApiGatewayAuthService } from '../auth/api-auth.service';
 import { ApiGatewayAuthController } from './api-auth.controller';
 import { AuthenticationMiddleware } from 'src/common/middlewares/authentication.middleware';
-import { RedisService } from '../redis/redis.service';
+import { RedisService } from 'src/modules/redis/redis.service';
 //import { JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 // import type { RedisClientOptions } from 'redis';
@@ -16,6 +16,8 @@ import { PassportModule } from '@nestjs/passport';
     controllers: [ApiGatewayAuthController]
 })
 export class ApiGatewayAuthModule {
+}
+
 //     implements NestModule {
 //     configure(consumer: MiddlewareConsumer) {
 //     consumer
@@ -28,4 +30,3 @@ export class ApiGatewayAuthModule {
 //     )
 //         .forRoutes(ApiGatewayAuthController);
 //   }
-}
