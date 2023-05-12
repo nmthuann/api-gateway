@@ -1,16 +1,12 @@
 import { IsEmail, IsNotEmpty } from "class-validator";
 
-export class LoginUserDto {
+export class AccountDto {
 
     @IsEmail()
     email: string;
 
     @IsNotEmpty()
     password: string;
-
-    // constructor(
-    //     email: string,
-    //     password: string,){}
 
     toString(){
         return JSON.stringify({
@@ -19,7 +15,3 @@ export class LoginUserDto {
         })
     }
 }
-
-/**
- * test input đầu vào
- */

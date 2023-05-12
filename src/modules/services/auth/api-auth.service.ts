@@ -1,20 +1,18 @@
 import {  CACHE_MANAGER, Inject, Injectable} from '@nestjs/common';
-import { LoginUserDto } from './auth-dto/login.dto';
+import { AccountDto } from './auth-dto/account.dto';
 import { ProducerService } from 'src/modules/kafka/producer.service';
 import { Kafka, logLevel } from 'kafkajs';
 import { ConsumerService } from 'src/modules/kafka/consumer.service';
-import { Tokens } from 'src/common/bases/types/token.type';
+import { Tokens } from 'src/modules/bases/types/token.type';
 import { TokensDto } from './auth-dto/tokens.dto';
 import { Cache } from 'cache-manager';
 import { RefreshDto } from './auth-dto/refresh.dto';
 import { throwError } from 'rxjs';
+import { JwtService } from '@nestjs/jwt';
 
 /**
- * 1. Login
  * 2. Register
  * 3. Logout
- * 4. Refresh Token
- * 5. Forgot Password
  */
 
 @Injectable()
@@ -22,20 +20,47 @@ export class ApiGatewayAuthService {
   constructor(
     private producerService: ProducerService,
     private consumerService: ConsumerService,
+    private jwtService: JwtService,
     @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) {}    
 
 
-  async login(resTopic: string, inputLogin: LoginUserDto){
+  //  decode token
+  async decodeToken(token: string){
+    const decode_token = this.jwtService.decode(token);
+    console.log("decode: ", decode_token);
+    return await decode_token['email'];
+  }
+
+
+  async checkRole(){
+    return;
+  }
+
+
+  async login(resTopic: string, inputLogin: AccountDto){
     // publish a producer - send message to service
-    await this.producerService.sendMessage('api-auth-login-req', inputLogin, 6000);
+    await this.producerService.sendMessage('api-auth-login-req', inputLogin, 60000);
+
+    // get access token from AuthService
+    const tokens = 
+    await this.consumerService.handleMessage<Tokens | object | any | string>('api-gateway', resTopic);
+
+    // set cache
+    await this.cacheService.set(inputLogin.email, tokens);
+    return tokens;
+  }
+
+
+  async register(resTopic: string, input: AccountDto){
+    // publish a producer - send message to service
+    await this.producerService.sendMessage('api-auth-login-req', input, 60000);
 
     // get access token
     const tokens = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
 
     // set cache
-    await this.cacheService.set(inputLogin.email, tokens.access_token);
-
+    await this.cacheService.set(input.email, tokens);
     return tokens;
   }
 
