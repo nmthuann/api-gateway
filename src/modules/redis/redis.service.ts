@@ -17,7 +17,7 @@ export class RedisService {
     async get(key: string) {
         const redisValue  = await  await this.cacheService.get(key);
         if (redisValue) {
-            return JSON.parse(redisValue as string );
+            return JSON.parse(redisValue as string);
             //return redisValue;
         }
         return null;

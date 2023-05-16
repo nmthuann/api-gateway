@@ -1,32 +1,48 @@
 import {MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { KafkaModule } from 'src/modules/kafka/kafka.module';
-//import * as redisStore from 'cache-manager';
-import { CacheModule } from '@nestjs/cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
 import { ApiGatewayAuthService } from '../auth/api-auth.service';
 import { ApiGatewayAuthController } from './api-auth.controller';
 import { AuthenticationMiddleware } from 'src/common/middlewares/authentication.middleware';
 import { RedisService } from 'src/modules/redis/redis.service';
-//import { JwtService } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-// import type { RedisClientOptions } from 'redis';
+import { JWTStrategy } from 'src/common/strategies/jwt.strategy';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
-    imports: [KafkaModule, ],//PassportModule
-    providers: [ApiGatewayAuthService, RedisService, ],
+    imports: [ 
+    ClientsModule.register([
+    {
+      name: 'AUTH_SERVICE',
+      transport: Transport.KAFKA,
+      options: {
+        client: {
+          clientId: 'auth',
+          brokers: ['localhost:9092'],
+        },
+        consumer: {
+          groupId: 'auth-consumer'
+        }
+      }
+      }]),  
+      JwtModule.register({
+          secret: process.env.JWT_SECRET,
+          signOptions: { expiresIn: 60},
+        }),
+        KafkaModule,
+    ],
+    providers: [
+        ApiGatewayAuthService, 
+        RedisService,
+        // JWTStrategy,
+    ],
     controllers: [ApiGatewayAuthController]
 })
-export class ApiGatewayAuthModule {
+export class ApiGatewayAuthModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(AuthenticationMiddleware)
+            .exclude(
+                { path: 'auth/login', method: RequestMethod.POST },
+                { path: 'auth/register', method: RequestMethod.POST },
+            )
+        .forRoutes(ApiGatewayAuthController);
+    }
 }
-
-//     implements NestModule {
-//     configure(consumer: MiddlewareConsumer) {
-//     consumer
-//         .apply(AuthenticationMiddleware)
-//         .exclude(
-//         { path: 'api/auth/login', method: RequestMethod.POST },
-//         { path: 'api/auth/register', method: RequestMethod.POST },
-//         //{ path: 'auth/refresh', method: RequestMethod.POST },
-//         //'auth/(.*)',
-//     )
-//         .forRoutes(ApiGatewayAuthController);
-//   }

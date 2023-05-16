@@ -1,16 +1,26 @@
-// import { Inject, Injectable } from '@nestjs/common';
-// import { ClientKafka } from '@nestjs/microservices/client';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices/client';
+import { PostDto } from './post-dto/post.dto';
+import { ProducerService } from 'src/modules/kafka/producer.service';
+import { ConsumerService } from 'src/modules/kafka/consumer.service';
 
-// //import { OrderCreatedEvent } from './order-created.event';
-// import { CreatePostDto } from './post-dto/create-post.dto';
+@Injectable()
+export class ApiGatewayPostService {
+  constructor(
+    @Inject('POST_SERVICE') 
+    private readonly postClient: ClientKafka,
+    private consumerService: ConsumerService,
+  ){}
 
-// @Injectable()
-// export class ApiGatewayPostService {
-//   constructor(@Inject('POST_SERVICE') 
-//     private readonly postClient: ClientKafka){}
+  async createPost(postDto: PostDto,  resTopic: string){
+    this.postClient.emit('post_created', JSON.stringify(postDto));
+    const postCreated = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
+    return postCreated;
+  }
 
-//   createPost(input: CreatePostDto){
-//     this.postClient.emit('post_created',
-//     new OrderCreatedEvent('123', userId, price).toString())
-//   }
-// }
+  async getPosts(resTopic: string){ 
+    this.postClient.emit('getPosts-req', 'get-list');
+    const posts = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
+    return posts;
+  }
+}

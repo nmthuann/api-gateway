@@ -2,12 +2,11 @@ import {MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/co
 import { AuthenticationMiddleware } from 'src/common/middlewares/authentication.middleware';
 import { KafkaModule } from 'src/modules/kafka/kafka.module';
 import { RedisService } from 'src/modules/redis/redis.service';
-import { ApiGatewayUserController } from './api-user.controller';
-import { ApiGatewayUserService } from './api-user.service';
+import { ApiGatewayOrderController } from './api-order.controller';
+import { ApiGatewayOrderService } from './api-order.service';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'src/common/guards/role.guard';
-import { JWTStrategy } from 'src/common/strategies/jwt.strategy';
 
 @Module({
     imports: [
@@ -15,22 +14,22 @@ import { JWTStrategy } from 'src/common/strategies/jwt.strategy';
           secret: process.env.JWT_SECRET,
           signOptions: { expiresIn: 60},
         }),
-        KafkaModule, 
     ],
+    // KafkaModule, 
     providers: [ 
         {
             provide: APP_GUARD,
             useClass: RolesGuard,
         },
         RedisService, 
-        ApiGatewayUserService,
-        //JWTStrategy,
+        ApiGatewayOrderService,
     ],
-    controllers: [ApiGatewayUserController]
+    controllers: [ApiGatewayOrderController]
 })
-export class ApiGatewayUserModule implements NestModule{
+export class ApiGatewayOrderModule implements NestModule{
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(AuthenticationMiddleware)
-        .forRoutes(ApiGatewayUserController);
-    }
+    consumer
+        .apply(AuthenticationMiddleware)
+    .forRoutes(ApiGatewayOrderController);
+  }
 }

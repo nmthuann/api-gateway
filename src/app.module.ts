@@ -7,10 +7,25 @@ import { ApiGatewayModule} from 'src/modules/apis/api-gateway.module';
 import * as redisStore from 'cache-manager-redis-store';
 import { ApiGatewayAuthModule } from 'src/modules/services/auth/api-auth.module'
 import { ApiGatewayUserModule } from './modules/services/users/api-user.module';
+import { JWTStrategy } from './common/strategies/jwt.strategy';
+import { ApiGatewayPostModule } from './modules/services/posts/api-post.module';
 
 @Module({
   imports: [
     ClientsModule.register([
+      // {
+      //   name: 'ORDER_SERVICE',
+      //   transport: Transport.KAFKA,
+      //   options: {
+      //     client: {
+      //       clientId: 'order',
+      //       brokers: ['localhost:9092'],
+      //     },
+      //     consumer: {
+      //       groupId: 'order-consumer'
+      //     }
+      //   }
+      // },
       // {
       //   name: 'POST_SERVICE',
       //   transport: Transport.KAFKA,
@@ -24,19 +39,32 @@ import { ApiGatewayUserModule } from './modules/services/users/api-user.module';
       //     }
       //   }
       // },
-      {
-        name: 'AUTH_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'auth',
-            brokers: ['localhost:9092'],
-          },
-          consumer: {
-            groupId: 'auth-consumer'
-          }
-        }
-      }
+      // {
+      //   name: process.env.AUTH_SERVICE,
+      //   transport: Transport.KAFKA,
+      //   options: {
+      //     client: {
+      //       clientId: process.env.CLIENT_AUTH_ID,
+      //       brokers: [process.env.BROKER_AUTH],
+      //     },
+      //     consumer: {
+      //       groupId: process.env.GROUP_AUTH_ID
+      //     }
+      //   }
+      // }
+      // {
+      // name: 'AUTH_SERVICE',
+      // transport: Transport.KAFKA,
+      // options: {
+      //   client: {
+      //     clientId: 'auth',
+      //     brokers: ['localhost:9092'],
+      //   },
+      //   consumer: {
+      //     groupId: 'auth-consumer'
+      //   }
+      // }
+      // },
     ]),
     CacheModule.register({
       isGlobal: true,
@@ -47,11 +75,15 @@ import { ApiGatewayUserModule } from './modules/services/users/api-user.module';
       ttl: 60*15, // seconds
     }),
     ApiGatewayModule,
-    // ApiGatewayAuthModule,
+    ApiGatewayAuthModule,
     ApiGatewayUserModule,
+    // ApiGatewayPostModule,
   ],
   controllers: [AppController],
-  providers: [AppService,],
+  providers: [
+    AppService,
+    // JWTStrategy,
+  ],
 })
 export class AppModule {
 }
