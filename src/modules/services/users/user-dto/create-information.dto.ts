@@ -4,24 +4,24 @@ import { CreateProfileDto } from "./create-profile.dto";
 export class CreateInformationDto{
 
     @IsEmail()
-    email: string;
+    readonly email: string;
 
     @IsNotEmpty()
-    first_name: string;
+    readonly first_name: string;
 
-    last_name: string;
+    readonly last_name: string;
 
-    gender: string;
-
-    @IsNotEmpty()
-    birthday: Date;
-
-    address: string;
+    readonly gender: string;
 
     @IsNotEmpty()
-    phone: string;
+    readonly birthday: Date;
 
-    education: string;
+    readonly address: string;
 
-    profile: CreateProfileDto;
+    @IsNotEmpty()
+    readonly phone: string;
+
+    readonly education: string;
+
+    readonly profile: CreateProfileDto;
 }

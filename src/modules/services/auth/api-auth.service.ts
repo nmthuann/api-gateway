@@ -9,8 +9,11 @@ import { Cache } from 'cache-manager';
 import { RefreshDto } from './auth-dto/refresh.dto';
 import { throwError } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
+import { RedisService } from 'src/modules/redis/redis.service';
+import { ClientKafka } from '@nestjs/microservices';
 
 /**
+ * 1. login
  * 2. Register
  * 3. Logout
  */
@@ -18,23 +21,20 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class ApiGatewayAuthService {
   constructor(
+    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
     private producerService: ProducerService,
     private consumerService: ConsumerService,
-    private jwtService: JwtService,
+    private readonly redisService: RedisService,
     @Inject(CACHE_MANAGER) private cacheService: Cache,
+    
+
   ) {}    
 
-
-  //  decode token
-  async decodeToken(token: string){
-    const decode_token = this.jwtService.decode(token);
-    console.log("decode: ", decode_token);
-    return await decode_token['email'];
-  }
-
-
-  async checkRole(){
-    return;
+  async logout(email: string){
+    await this.redisService.delete(email);
+    // await this.producerService.sendMessage('api-auth-logout-req', email, 6000);
+    this.authClient.emit('api-auth-logout',email);
+    return true;
   }
 
 
@@ -54,7 +54,7 @@ export class ApiGatewayAuthService {
 
   async register(resTopic: string, input: AccountDto){
     // publish a producer - send message to service
-    await this.producerService.sendMessage('api-auth-login-req', input, 60000);
+    await this.producerService.sendMessage('api-auth-register-req', input, 60000);
 
     // get access token
     const tokens = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
@@ -99,7 +99,6 @@ export class ApiGatewayAuthService {
   //         reject(error);
   //       }
   //     });
-
   //   await this.cacheService.set(login.email, (await responseTokens).access_token)
   //   return responseTokens;
   // }

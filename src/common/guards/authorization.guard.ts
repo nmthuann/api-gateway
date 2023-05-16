@@ -4,9 +4,11 @@ import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class AuthorizationnGuard extends AuthGuard('jwt') {
-    constructor(private reflector: Reflector) { // Reflector là gì?
+  constructor(
+      private reflector: Reflector
+  ) { 
     super();
-    }
+  }
 
   canActivate(context: ExecutionContext) {
     const isPublic = this.reflector.getAllAndOverride('isPublic', [
@@ -16,6 +18,7 @@ export class AuthorizationnGuard extends AuthGuard('jwt') {
 
     if (isPublic) return true;
 
+    console.log(super.canActivate(context));
     return super.canActivate(context);
-    }
+  }
 }

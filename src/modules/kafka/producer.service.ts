@@ -43,7 +43,7 @@ export class ProducerService  { //implements OnModuleInit, OnApplicationShutdown
     await this.start();
     await this.produce({
       topic: reqTopic,
-      messages: [{value:message.toString()}],
+      messages: [{value:JSON.stringify(message)}],
       timeout: timeout,
     });
     await this.shutdown();

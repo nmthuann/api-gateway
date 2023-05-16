@@ -12,10 +12,19 @@ import { ValidatorPipe } from 'src/common/pipes/validator.pipe';
 import { AccountDto } from './auth-dto/account.dto';
 import { ApiGatewayAuthService } from '../auth/api-auth.service';
 import { AccountPipeValidator } from 'src/common/pipes/account.validator.pipe';
+import { AuthorizationnGuard } from 'src/common/guards/authorization.guard';
+
+/**
+ * 1. POST/auth/login -> login
+ * 2. POST/auth/register -> register
+ * 3. POST/auth/logout -> logout
+ */
+
 
 @Controller('auth')
 export class ApiGatewayAuthController {
-  constructor(private readonly apiGatewayAuthService: ApiGatewayAuthService,
+  constructor(
+    private readonly apiGatewayAuthService: ApiGatewayAuthService,
     // private readonly jwtService: JwtService,
     // private readonly redisService: RedisService
   ) {}
@@ -30,14 +39,26 @@ export class ApiGatewayAuthController {
 
 
   @Public()
-  @Post('regiter')
+  @Post('register')
   @UsePipes(new AccountPipeValidator())  // new TransformPipe()
   async register(@Body() accountDto: AccountDto){
     return await this.apiGatewayAuthService.register('auth-api-register-res', accountDto);
   }
 
+  
+  @UseGuards(AuthorizationnGuard)
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@Request() req: any){
+    const checkStatus =  await this.apiGatewayAuthService.logout(req['email']);
+    if (checkStatus)  
+      return {
+        message: "you are logged out",
+        status: 204
+      };
+    return {message: 404};
+  }
 }
-
 
 
 

@@ -1,14 +1,15 @@
-import { PackageDto } from "./package.dto";
+// export class PostCreatedEvent{
+//     constructor(
+//         public readonly postId: string,
+//         public readonly userId: string,
+//         public readonly price: number
+//     ){}
 
-export class CreatePostDto {
-  //job_post_id: number;
-  job_name: string;
-  categoryDetail: string;
-  //vote: number;
-  job_post_detail: {
-    profile_name: string;
-    packages: PackageDto[];
-    description: string;
-    FAQ: string;
-  };
-}
+//         toString(){
+//             return JSON.stringify({
+//                 postId: this.postId,
+//                 userId: this.userId,
+//                 price: this.price,
+//             })
+//         }
+// }
