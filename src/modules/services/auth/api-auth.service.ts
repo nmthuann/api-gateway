@@ -1,16 +1,7 @@
 import {  CACHE_MANAGER, Inject, Injectable} from '@nestjs/common';
 import { AccountDto } from './auth-dto/account.dto';
-import { ProducerService } from 'src/modules/kafka/producer.service';
-import { Kafka, logLevel } from 'kafkajs';
-import { ConsumerService } from 'src/modules/kafka/consumer.service';
-import { Tokens } from 'src/modules/bases/types/token.type';
-import { TokensDto } from './auth-dto/tokens.dto';
 import { Cache } from 'cache-manager';
-import { RefreshDto } from './auth-dto/refresh.dto';
-import { throwError } from 'rxjs';
-import { JwtService } from '@nestjs/jwt';
-import { RedisService } from 'src/modules/redis/redis.service';
-import { ClientKafka } from '@nestjs/microservices';
+import axios from 'axios';
 
 /**
  * 1. login
@@ -20,51 +11,114 @@ import { ClientKafka } from '@nestjs/microservices';
 
 @Injectable()
 export class ApiGatewayAuthService {
+
   constructor(
-    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
-    private producerService: ProducerService,
-    private consumerService: ConsumerService,
-    private readonly redisService: RedisService,
+    // @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
+    // // private producerService: ProducerService,
+    // // private consumerService: ConsumerService,
+    // //private readonly redisService: RedisService,
     @Inject(CACHE_MANAGER) private cacheService: Cache,
     
 
   ) {}    
 
-  async logout(email: string){
-    await this.redisService.delete(email);
-    // await this.producerService.sendMessage('api-auth-logout-req', email, 6000);
-    this.authClient.emit('api-auth-logout',email);
-    return true;
+  public async login(inputLogin: AccountDto): Promise<any> {
+    const url = `http://localhost:8088/user/auth/login`;
+    const data = inputLogin;
+    try {
+      const response = await axios.post(url, data);
+      //  console.log(response)
+      await this.cacheService.set(inputLogin.email, response['data']);//  ['refresh_token']
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
   }
 
-
-  async login(resTopic: string, inputLogin: AccountDto){
-    // publish a producer - send message to service
-    await this.producerService.sendMessage('api-auth-login-req', inputLogin, 60000);
-
-    // get access token from AuthService
-    const tokens = 
-    await this.consumerService.handleMessage<Tokens | object | any | string>('api-gateway', resTopic);
-
-    // set cache
-    await this.cacheService.set(inputLogin.email, tokens);
-    return tokens;
+  async register(input: AccountDto): Promise<any> {
+    const url = `http://localhost:8088/user/auth/register`;
+    const data = input;
+    try {
+      const response = await axios.post(url, data);
+      await this.cacheService.set(input.email, response['data']);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
   }
 
-
-  async register(resTopic: string, input: AccountDto){
-    // publish a producer - send message to service
-    await this.producerService.sendMessage('api-auth-register-req', input, 60000);
-
-    // get access token
-    const tokens = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
-
-    // set cache
-    await this.cacheService.set(input.email, tokens);
-    return tokens;
+  async logout(token:string, email: string){
+    await this.cacheService.del(email);
+    const url = `http://localhost:8088/user/auth/logout`;
+    const data = email;
+    try {
+      const response = await axios.post(url, data, {
+         headers: {
+          'Authorization': `Bearer ${token}` 
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
   }
 
 }
+
+
+
+
+
+
+  // async login(resTopic: string, inputLogin: AccountDto){
+  //   // publish a producer - send message to service
+  //   await this.producerService.sendMessage('api-auth-login', inputLogin, 5000);
+
+  //   // get access token from AuthService
+  //   const tokens = 
+  //   await this.consumerService.handleMessage<Tokens | object | string>('api-gateway', resTopic);
+
+  //   // set cache
+  //   await this.cacheService.set(inputLogin.email, tokens);
+  //   return tokens;
+  // }
+
+
+  // async register(resTopic: string, input: AccountDto){
+  //   // publish a producer - send message to service
+  //   await this.producerService.sendMessage('api-auth-register-req', input, 60000);
+
+  //   // get access token
+  //   const tokens = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
+
+  //   // set cache
+  //   await this.cacheService.set(input.email, tokens);
+  //   return tokens;
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   // async login(topic: string, login: LoginUserDto){

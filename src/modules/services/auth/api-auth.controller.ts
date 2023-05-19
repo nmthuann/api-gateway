@@ -12,7 +12,8 @@ import { ValidatorPipe } from 'src/common/pipes/validator.pipe';
 import { AccountDto } from './auth-dto/account.dto';
 import { ApiGatewayAuthService } from '../auth/api-auth.service';
 import { AccountPipeValidator } from 'src/common/pipes/account.validator.pipe';
-import { AuthorizationnGuard } from 'src/common/guards/authorization.guard';
+import { AuthorizationGuard } from 'src/common/guards/authorization.guard';
+import { RolesGuard } from 'src/common/guards/role.guard';
 
 /**
  * 1. POST/auth/login -> login
@@ -25,8 +26,6 @@ import { AuthorizationnGuard } from 'src/common/guards/authorization.guard';
 export class ApiGatewayAuthController {
   constructor(
     private readonly apiGatewayAuthService: ApiGatewayAuthService,
-    // private readonly jwtService: JwtService,
-    // private readonly redisService: RedisService
   ) {}
 
   @Public()
@@ -34,7 +33,7 @@ export class ApiGatewayAuthController {
   @UsePipes(new AccountPipeValidator())
   async login(@Body() loginDto: AccountDto){
     console.log("Check account .... ", loginDto);
-    return await this.apiGatewayAuthService.login('auth-api-login-res', loginDto);
+    return await this.apiGatewayAuthService.login(loginDto);//'api-auth-login',
   }
 
 
@@ -42,21 +41,17 @@ export class ApiGatewayAuthController {
   @Post('register')
   @UsePipes(new AccountPipeValidator())  // new TransformPipe()
   async register(@Body() accountDto: AccountDto){
-    return await this.apiGatewayAuthService.register('auth-api-register-res', accountDto);
+    return await this.apiGatewayAuthService.register(accountDto);//'auth-api-register-res', 
   }
 
   
-  @UseGuards(AuthorizationnGuard)
+  @UseGuards(RolesGuard)
   @Post('logout')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Request() req: any){
-    const checkStatus =  await this.apiGatewayAuthService.logout(req['email']);
-    if (checkStatus)  
-      return {
-        message: "you are logged out",
-        status: 204
-      };
-    return {message: 404};
+    const email = req['email'];
+    const token = req['token']
+    return await this.apiGatewayAuthService.logout(token, email);
   }
 }
 

@@ -8,6 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'src/common/guards/role.guard';
 import { JWTStrategy } from 'src/common/strategies/jwt.strategy';
+import { UserRoleGuard } from 'src/common/guards/user.role.guard';
+import { AdminRoleGuard } from 'src/common/guards/admin.role.guard';
 
 @Module({
     imports: [
@@ -18,12 +20,14 @@ import { JWTStrategy } from 'src/common/strategies/jwt.strategy';
         KafkaModule, 
     ],
     providers: [ 
-        {
-            provide: APP_GUARD,
-            useClass: RolesGuard,
-        },
+        // {
+        //     provide: APP_GUARD,
+        //     useClass: RolesGuard,
+        // },
         RedisService, 
         ApiGatewayUserService,
+        UserRoleGuard,
+        AdminRoleGuard,
         //JWTStrategy,
     ],
     controllers: [ApiGatewayUserController]

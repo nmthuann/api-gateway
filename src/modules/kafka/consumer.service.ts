@@ -19,7 +19,7 @@ export class ConsumerService  {//implements OnApplicationShutdown
 
   private readonly consumers: Consumer[] = [];
 
-   private readonly kafka = new Kafka({
+  private readonly kafka = new Kafka({
     brokers: ['localhost:9092'],
     //onnectionTimeout: 6000,
   });
@@ -61,7 +61,7 @@ export class ConsumerService  {//implements OnApplicationShutdown
           }
         );
         // close connect consumer
-        // this.shutdown();
+        this.shutdown();
       // } catch (error) {
       //   reject(error);
       // }

@@ -3,7 +3,7 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
-export class AuthorizationnGuard extends AuthGuard('jwt') {
+export class AuthorizationGuard extends AuthGuard('jwt') {
   constructor(
       private reflector: Reflector
   ) { 
@@ -18,7 +18,7 @@ export class AuthorizationnGuard extends AuthGuard('jwt') {
 
     if (isPublic) return true;
 
-    console.log(super.canActivate(context));
+    //console.log(super.canActivate(context));
     return super.canActivate(context);
   }
 }
