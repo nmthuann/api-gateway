@@ -7,6 +7,8 @@ import { ApiGatewayPostService } from './api-post.service';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'src/common/guards/role.guard';
+import { AdminRoleGuard } from 'src/common/guards/admin.role.guard';
+import { UserRoleGuard } from 'src/common/guards/user.role.guard';
 
 @Module({
     imports: [
@@ -17,19 +19,21 @@ import { RolesGuard } from 'src/common/guards/role.guard';
         KafkaModule, 
     ],
     providers: [ 
-        {
-            provide: APP_GUARD,
-            useClass: RolesGuard,
-        },
+        // {
+        //     provide: APP_GUARD,
+        //     useClass: RolesGuard,
+        // },
         RedisService, 
         ApiGatewayPostService,
+        AdminRoleGuard,
+        UserRoleGuard,
     ],
     controllers: [ApiGatewayPostController]
 })
 export class ApiGatewayPostModule implements NestModule{
     configure(consumer: MiddlewareConsumer) {
     consumer
-        .apply(AuthenticationMiddleware)
+    .apply(AuthenticationMiddleware)
     .forRoutes(ApiGatewayPostController);
   }
 }

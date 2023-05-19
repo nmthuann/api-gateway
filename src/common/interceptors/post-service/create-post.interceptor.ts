@@ -8,7 +8,6 @@ export class CreatePostInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest();
     const { body } = request;
 
-    // check !email
     if (!body.post_detail.profile_user) {
       body.post_detail.profile_user = request['email'];
     }

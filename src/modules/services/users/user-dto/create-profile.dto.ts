@@ -1,5 +1,5 @@
 export class CreateProfileDto{
-    email: string;
+    // email: string;
     avatar: string;
     mySkill: string;
     occupation: string;

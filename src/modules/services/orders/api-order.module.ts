@@ -26,10 +26,11 @@ import { RolesGuard } from 'src/common/guards/role.guard';
     ],
     controllers: [ApiGatewayOrderController]
 })
-export class ApiGatewayOrderModule implements NestModule{
-    configure(consumer: MiddlewareConsumer) {
-    consumer
-        .apply(AuthenticationMiddleware)
-    .forRoutes(ApiGatewayOrderController);
-  }
-}
+export class ApiGatewayOrderModule{}
+//  implements NestModule{
+//     configure(consumer: MiddlewareConsumer) {
+//     consumer
+//         .apply(AuthenticationMiddleware)
+//     .forRoutes(ApiGatewayOrderController);
+//   }
+// }

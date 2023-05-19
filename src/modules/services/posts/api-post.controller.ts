@@ -1,9 +1,11 @@
 import { Body, Controller, Get, Post, UseGuards, UseInterceptors, Request } from '@nestjs/common';
 import { ApiGatewayPostService } from './api-post.service';
 import { PostDto } from './post-dto/post.dto';
-import { AuthorizationnGuard } from 'src/common/guards/authorization.guard';
+import { AuthorizationGuard } from 'src/common/guards/authorization.guard';
 import { CreatePostInterceptor } from 'src/common/interceptors/post-service/create-post.interceptor';
 import { RolesGuard } from 'src/common/guards/role.guard';
+import { AdminRoleGuard } from 'src/common/guards/admin.role.guard';
+import { UserRoleGuard } from 'src/common/guards/user.role.guard';
 
 /**
  * 1. Create Post -> for Freelancer
@@ -15,19 +17,18 @@ export class ApiGatewayPostController {
   constructor(private readonly apiGatewayPostService: ApiGatewayPostService) {}
 
 
-  @UseGuards(AuthorizationnGuard)
+  @UseGuards(UserRoleGuard)
   @Post('create-post')
   @UseInterceptors(CreatePostInterceptor)
   async CreateOrder(@Request() req: any, @Body() postDto: PostDto){
-    console.log("post DTo", postDto);
-    console.log(`${req['email']} call method`);
-    return this.apiGatewayPostService.createPost(postDto, 'create-post-res');
+    const token = req['token'];
+    return this.apiGatewayPostService.createPost(token, postDto);
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(AdminRoleGuard)
   @Get('get-posts')
   async getPosts(@Request() req: any){
-    console.log(`${req['email']} call method`);
-    return await this.apiGatewayPostService.getPosts('getPosts-reqs');
+    const token = req['token']
+    return await this.apiGatewayPostService.getPosts(token);
   }
 }
