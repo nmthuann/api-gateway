@@ -50,8 +50,7 @@ import { AdminRoleGuard } from 'src/common/guards/admin.role.guard';
 export class ApiGatewayAuthModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
-        .apply(AuthenticationMiddleware)
-        
+        .apply(AuthenticationMiddleware)     
         .exclude(
           { path: 'auth/login', method: RequestMethod.POST },
           { path: 'auth/register', method: RequestMethod.POST },

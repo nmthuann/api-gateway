@@ -34,6 +34,14 @@ export class ApiGatewayPostModule implements NestModule{
     configure(consumer: MiddlewareConsumer) {
     consumer
     .apply(AuthenticationMiddleware)
+    .exclude (
+      {path: '/post/get-posts', method: RequestMethod.GET },
+      {path: '/post/get-categories', method: RequestMethod.GET },
+      {path: '/post/category-detail-list/:id', method: RequestMethod.GET },
+      {path: '/post/get-posts/:id', method: RequestMethod.GET },
+      {path: '/post/get-post/:id', method: RequestMethod.GET },
+      {path: '/post/get-category-details', method: RequestMethod.GET },
+      )
     .forRoutes(ApiGatewayPostController);
   }
 }

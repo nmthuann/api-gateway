@@ -1,4 +1,4 @@
-import {  CACHE_MANAGER, Inject, Injectable} from '@nestjs/common';
+import {  CACHE_MANAGER, HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import { AccountDto } from './auth-dto/account.dto';
 import { Cache } from 'cache-manager';
 import axios from 'axios';
@@ -13,29 +13,25 @@ import axios from 'axios';
 export class ApiGatewayAuthService {
 
   constructor(
-    // @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
-    // // private producerService: ProducerService,
-    // // private consumerService: ConsumerService,
-    // //private readonly redisService: RedisService,
     @Inject(CACHE_MANAGER) private cacheService: Cache,
-    
-
   ) {}    
 
-  public async login(inputLogin: AccountDto): Promise<any> {
+  public async login(inputLogin: AccountDto){
     const url = `http://localhost:8088/user/auth/login`;
     const data = inputLogin;
     try {
       const response = await axios.post(url, data);
-      //  console.log(response)
-      await this.cacheService.set(inputLogin.email, response['data']);//  ['refresh_token']
+      // console.log(response.data)
+      if (await response.data['message'] == 'password wrong')
+        return new HttpException({ message: 'Please Login again!' }, HttpStatus.FORBIDDEN);
+      await this.cacheService.set(inputLogin.email, response.data);
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);
     }
   }
 
-  async register(input: AccountDto): Promise<any> {
+  async register(input: AccountDto){
     const url = `http://localhost:8088/user/auth/register`;
     const data = input;
     try {

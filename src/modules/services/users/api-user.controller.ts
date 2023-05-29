@@ -6,7 +6,8 @@ UseInterceptors,
 HttpCode,
 HttpStatus,
 NestMiddleware,
-ValidationPipe} from '@nestjs/common';
+ValidationPipe
+} from '@nestjs/common';
 import { AccountPipeValidator } from 'src/common/pipes/account.validator.pipe';
 import { ApiGatewayUserService } from './api-user.service';
 import { RolesGuard } from 'src/common/guards/role.guard';
@@ -23,6 +24,7 @@ import { UserRoleGuard } from 'src/common/guards/user.role.guard';
  *  1. create Information 
  *  2. create Profile
  *  3. get Users
+ *  4. get-profile-list
  */
 
 @Controller('user')
@@ -31,6 +33,14 @@ export class ApiGatewayUserController {
     private readonly apiGatewayUserService: ApiGatewayUserService,
   ) {}
 
+
+  @UseGuards(RolesGuard)
+  @Get('get-user')
+  async getUserByEmail(@Request() req: any){
+    // const email = req['email'];
+    const token = req['token'];
+    return await this.apiGatewayUserService.getUserByEmail(token);
+  }
 
   @UseGuards(UserRoleGuard)
   @Post('create-information')
@@ -55,13 +65,23 @@ export class ApiGatewayUserController {
     return await this.apiGatewayUserService.createProfile(token, profileDto);
   }
 
+
   @UseGuards(AdminRoleGuard)
-  @Get('get-users') // -> for Admin
-  async getUsers(@Request() req: any){
-    console.log(`${req['user']} called method`);
+  @Get('get-profiles') // -> for Admin
+  async getProfileUsers(@Request() req: any){
     const token = req['token'];
-    return await this.apiGatewayUserService.getUsers(token);
+    return await this.apiGatewayUserService.getProfiles(token);
   }
+
 }
+
+
+
+  // @Get('get-user-profile') // -> for Admin
+  // async getUser(@Request() req: any){
+  //   // console.log(`${req['user']} called method`);
+  //   // const token = req['token'];token
+  //   return await this.apiGatewayUserService.getProfiles();
+  // }
 
 

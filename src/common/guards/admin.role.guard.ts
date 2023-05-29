@@ -7,7 +7,6 @@ import { Role } from "src/modules/bases/enums/role.enum";
 export class AdminRoleGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    private jwtService: JwtService,
   ) {}
 
     canActivate(context: ExecutionContext): boolean {
@@ -22,11 +21,12 @@ export class AdminRoleGuard implements CanActivate {
       if (isPublic) return true;
       else{
         const request = context.switchToHttp().getRequest();
-        console.log(request);
+        //console.log(request);
         const payload = request['user']; // Lấy thông tin người dùng từ request object
 
         // Kiểm tra và xử lý vai trò của người dùng
         //const decode_token = this.jwtService.decode(token);
+        console.log(payload['role'])
         if (payload['role'] != Role.Admin){
           
           // request['email'] = decode_token['email'];

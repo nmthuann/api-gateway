@@ -20,7 +20,7 @@ export class UserRoleGuard implements CanActivate {
       if (isPublic) return true;
       else{
         const request = context.switchToHttp().getRequest();
-        console.log(request);
+        //console.log(request);
         const payload = request['user'];
         // Kiểm tra và xử lý vai trò của người dùng
         if (payload['role'] == Role.Admin){

@@ -12,7 +12,6 @@ import { ValidatorPipe } from 'src/common/pipes/validator.pipe';
 import { AccountDto } from './auth-dto/account.dto';
 import { ApiGatewayAuthService } from '../auth/api-auth.service';
 import { AccountPipeValidator } from 'src/common/pipes/account.validator.pipe';
-import { AuthorizationGuard } from 'src/common/guards/authorization.guard';
 import { RolesGuard } from 'src/common/guards/role.guard';
 
 /**
@@ -28,20 +27,21 @@ export class ApiGatewayAuthController {
     private readonly apiGatewayAuthService: ApiGatewayAuthService,
   ) {}
 
+  
   @Public()
   @Post('login')
   @UsePipes(new AccountPipeValidator())
   async login(@Body() loginDto: AccountDto){
     console.log("Check account .... ", loginDto);
-    return await this.apiGatewayAuthService.login(loginDto);//'api-auth-login',
+    return await this.apiGatewayAuthService.login(loginDto);
   }
 
 
   @Public()
   @Post('register')
-  @UsePipes(new AccountPipeValidator())  // new TransformPipe()
+  @UsePipes(new AccountPipeValidator())
   async register(@Body() accountDto: AccountDto){
-    return await this.apiGatewayAuthService.register(accountDto);//'auth-api-register-res', 
+    return await this.apiGatewayAuthService.register(accountDto);
   }
 
   

@@ -3,8 +3,8 @@ import { CreateProfileDto } from "./create-profile.dto";
 
 export class CreateInformationDto{
 
-    @IsEmail()
-    readonly email: string;
+    // @IsEmail()
+    // readonly email: string;
 
     @IsNotEmpty()
     readonly first_name: string;
