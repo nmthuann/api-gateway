@@ -10,7 +10,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
 import { Cache } from 'cache-manager';
 import axios from 'axios';
-import { Tokens } from 'src/modules/bases/types/token.type';
 import * as dotenv from 'dotenv';
 dotenv.config();
 

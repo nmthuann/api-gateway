@@ -4,9 +4,9 @@ import { CreateInformationDto } from 'src/modules/services/users/user-dto/create
 @Injectable()
 export class InformationPipeValidator implements PipeTransform {
   transform(value: CreateInformationDto) {
-    if (!value.email) {
-      throw new BadRequestException('Missing email');
-    }
+    // if (!value.email) {
+    //   throw new BadRequestException('Missing email');
+    // }
 
     if (!value.first_name) {
       throw new BadRequestException('Missing first_name');

@@ -14,6 +14,19 @@ export class ApiGatewayUserService {
   constructor(
   ) {}    
 
+  public async getUserByEmail(token: string){
+    const url = `http://localhost:8088/user/profile-document/get-user`;
+    try {
+      const response = await axios.get(url,{
+        headers: {
+          'Authorization': `Bearer ${token}` 
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
+  }
 
   public async createInformation(token: string, inforDto: CreateInformationDto): Promise<any> {
     const url = `http://localhost:8088/user/profile-document/create-information`;
@@ -45,14 +58,32 @@ export class ApiGatewayUserService {
     }
   }
   
-  public async getUsers(token: string): Promise<any> {
+  public async getUsers(): Promise<any> {
     const url = `http://localhost:8088/user/auth/show-list`;
     try {
-      const response = await axios.get(url, {
+      const response = await axios.get(url, 
+      //   {
+      //   headers: {
+      //     'Authorization': `Bearer ${token}`    
+      //   }
+      // }
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
+  }
+
+    public async getProfiles(token: string): Promise<any> {
+    const url = `http://localhost:8088/user/profile-document/get-profile-list`;
+    try {
+      const response = await axios.get(url, 
+        {
         headers: {
-          'Authorization': `Bearer ${token}` 
+          'Authorization': `Bearer ${token}`    
         }
-      });
+      }
+      );
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);

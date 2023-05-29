@@ -9,6 +9,7 @@ import { ApiGatewayAuthModule } from 'src/modules/services/auth/api-auth.module'
 import { ApiGatewayUserModule } from './modules/services/users/api-user.module';
 import { JWTStrategy } from './common/strategies/jwt.strategy';
 import { ApiGatewayPostModule } from './modules/services/posts/api-post.module';
+import { ApiGatewayOrderModule } from './modules/services/orders/api-order.module';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { ApiGatewayPostModule } from './modules/services/posts/api-post.module';
     ApiGatewayAuthModule,
     ApiGatewayUserModule,
     ApiGatewayPostModule,
+    ApiGatewayOrderModule
   ],
   controllers: [AppController],
   providers: [

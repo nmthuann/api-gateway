@@ -26,8 +26,8 @@ import { AdminRoleGuard } from 'src/common/guards/admin.role.guard';
         // },
         RedisService, 
         ApiGatewayUserService,
-        UserRoleGuard,
-        AdminRoleGuard,
+        // UserRoleGuard,
+         // AdminRoleGuard,
         //JWTStrategy,
     ],
     controllers: [ApiGatewayUserController]

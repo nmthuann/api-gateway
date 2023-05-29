@@ -4,12 +4,11 @@ import * as dotenv from 'dotenv';
 
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {cors: true});
   dotenv.config();
-
   app.setGlobalPrefix('api'); // tiền tố api
-  await app.listen(3000);
+  await app.listen(3333);
   console.log("API GATEWAY ..........")
-  console.log("http://localhost:3000/")
+  console.log("http://localhost:3333/")
 }
 bootstrap();
