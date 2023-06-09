@@ -2,6 +2,7 @@ import {  CACHE_MANAGER, HttpException, HttpStatus, Inject, Injectable} from '@n
 import { AccountDto } from './auth-dto/account.dto';
 import { Cache } from 'cache-manager';
 import axios from 'axios';
+import { Tokens } from 'src/modules/bases/types/token.type';
 
 /**
  * 1. login
@@ -16,16 +17,20 @@ export class ApiGatewayAuthService {
     @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) {}    
 
-  public async login(inputLogin: AccountDto){
+  public async login(inputLogin: AccountDto): Promise<Tokens| any>{
     const url = `http://localhost:8088/user/auth/login`;
     const data = inputLogin;
     try {
       const response = await axios.post(url, data);
-      // console.log(response.data)
-      if (await response.data['message'] == 'password wrong')
-        return new HttpException({ message: 'Please Login again!' }, HttpStatus.FORBIDDEN);
-      await this.cacheService.set(inputLogin.email, response.data);
-      return response.data;
+      console.log(response.data)
+      if (response.data.message){
+        //console.log(response.data.message)
+        return { message: response.data.message};
+      }
+      else{
+        await this.cacheService.set(inputLogin.email, response.data);
+        return response.data;
+      }
     } catch (error) {
       throw new Error(error.response.data.message);
     }

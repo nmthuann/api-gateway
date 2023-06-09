@@ -7,6 +7,7 @@ export class OrderDto{
     public deliveryTime: number;
     public totalPrice: number;
     public status: string;
+    public packageDetailID: number;
     // public timeStart: Date;
     // public timeEnd: Date;
 }
