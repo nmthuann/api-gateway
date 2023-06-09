@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, UseInterceptors, Request, Param } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, UseInterceptors, Request, Param, Put } from '@nestjs/common';
 import { ApiGatewayPostService } from './api-post.service';
 import { PostDto } from './post-dto/post.dto';
 import { AuthorizationGuard } from 'src/common/guards/authorization.guard';
@@ -25,9 +25,22 @@ export class ApiGatewayPostController {
   @UseGuards(UserRoleGuard)
   @Post('create-post')
   @UseInterceptors(CreatePostInterceptor)
-  async CreateOrder(@Request() req: any, @Body() postDto: PostDto){
+  async CreatePost(@Request() req: any, @Body() postDto: PostDto){
     const token = req['token'];
     return this.apiGatewayPostService.createPost(token, postDto);
+  }
+
+
+  @UseGuards(UserRoleGuard)
+  @Put('update-post/:id')
+  async updatePost(
+    @Param('id') id: number, 
+    @Request() req: any, 
+    @Body() postDto: PostDto
+  ): Promise<PostDto>{
+    const token = req['token'];
+    // const email = req['email'];
+    return this.apiGatewayPostService.updatePost(token, id, postDto);
   }
 
   // @Public()

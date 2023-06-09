@@ -56,12 +56,21 @@ export class ApiGatewayUserController {
   }
 
 
+
+  /**
+   * 
+   * @param req 
+   * @param profileDto 
+   * @returns 
+   */
+
   @UseGuards(UserRoleGuard)
   @Post('create-profile')
-  @UseInterceptors(CreateInformationInterceptor)
+  //@UseInterceptors(CreateInformationInterceptor)
   async createProfile(@Request() req: any, @Body() profileDto: CreateProfileDto){
-    console.log(`${req['user']} called method`);
+    console.log(`${req['email']} called method`);
     const token = req['token'];
+    console.log("profileDto: ", profileDto);
     return await this.apiGatewayUserService.createProfile(token, profileDto);
   }
 

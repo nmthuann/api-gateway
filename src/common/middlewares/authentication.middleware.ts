@@ -26,7 +26,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
 
     // get header from request
     const authHeader = req.headers.authorization;
-    
+    console.log("authHeader: ", authHeader);
     if (typeof authHeader === 'undefined') {
       throw new HttpException(
         'Middleware - Unauthorized: 401 - header empty!',  
@@ -34,9 +34,10 @@ export class AuthenticationMiddleware implements NestMiddleware {
       ); //res.sendStatus(401);
     } 
     else{
-      //  cut token
-      const token: string = req.get('authorization').replace('Bearer', '').trim();
-      console.log("token: ", token);
+
+      //   cut token
+      const token: string = req.get('Authorization').replace('Bearer', '').trim();
+      console.log("token: ", JSON.stringify(token));
 
       //  check valid of token
       try {
@@ -55,7 +56,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
 
         //  handle Error 1: decode -> expired
         const checkExpired = this.jwtService.decode(token);
-        console.log("checkExpired: ", checkExpired)
+        console.log("checkExpired - token: ", checkExpired)
 
         //  decode is success -> check cache in redis
         if(typeof checkExpired !== 'undefined'){

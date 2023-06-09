@@ -29,6 +29,21 @@ export class ApiGatewayPostService {
     }
   }
 
+  async updatePost(token: string, id: number, postDto: PostDto):Promise<PostDto>{
+    const url = `http://localhost:8089/post/posts/update/${id}`;
+    const data = postDto;
+    try {
+      const response = await axios.put(url, data, {
+         headers: {
+          'Authorization': `Bearer ${token}` 
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
+  }
+
   async getPosts(){ 
     const url = `http://localhost:8089/post/posts/get-posts`;
     try {
@@ -156,8 +171,7 @@ export class ApiGatewayPostService {
   async getPostById(id: number): Promise<PostDto>{ 
     const url = `http://localhost:8089/post/posts/get-post/${id}`;
     try {
-      const response = await axios.get(url,
-      );
+      const response = await axios.get(url);
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);
@@ -169,11 +183,11 @@ export class ApiGatewayPostService {
     const url = `http://localhost:8089/post/posts/get-post-user`;
     try {
       const response = await axios.get(url,
-      //   {
-      //    headers: {
-      //     'Authorization': `Bearer ${token}` 
-      //   }
-      // }
+        {
+         headers: {
+          'Authorization': `Bearer ${token}` 
+        }
+      }
       );
       return response.data;
     } catch (error) {
@@ -181,7 +195,34 @@ export class ApiGatewayPostService {
     }
   }
 
-  // async getEmail(post_id: number): Promise<string>{
+  
+
+
+}
+
+//  async createPost(postDto: PostDto,  resTopic: string){
+//     this.postClient.emit('post_created', JSON.stringify(postDto));
+//     const postCreated = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
+//     return postCreated;
+//   }
+
+//   async getPosts(resTopic: string){ 
+//     this.postClient.emit('getPosts-req', 'get-list');
+//     const posts = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
+//     return posts;
+//   }
+
+
+
+
+
+
+
+
+
+
+
+// async getEmail(post_id: number): Promise<string>{
   //   const post = await this.getPostById(post_id);
   //   const profile_user = post.post_detail.profile_user;
   //   return profile_user;
@@ -201,18 +242,3 @@ export class ApiGatewayPostService {
   //     throw new Error(error.response.data.message);
   //   }
   // }
-
-
-}
-
-//  async createPost(postDto: PostDto,  resTopic: string){
-//     this.postClient.emit('post_created', JSON.stringify(postDto));
-//     const postCreated = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
-//     return postCreated;
-//   }
-
-//   async getPosts(resTopic: string){ 
-//     this.postClient.emit('getPosts-req', 'get-list');
-//     const posts = await this.consumerService.handleMessage<any>('api-gateway', resTopic);
-//     return posts;
-//   }

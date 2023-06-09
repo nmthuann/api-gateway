@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateInformationDto } from './user-dto/create-information.dto';
 import { CreateProfileDto } from './user-dto/create-profile.dto';
 import axios from 'axios';
+import { ProfileDocumentDto } from './user-dto/profile.document.dto';
 
 
 @Injectable()
@@ -43,7 +44,7 @@ export class ApiGatewayUserService {
     }
   }
   
-  public async createProfile(token: string, profileDto: CreateProfileDto): Promise<any> {
+  public async createProfile(token: string, profileDto: CreateProfileDto): Promise<ProfileDocumentDto> {
     const url = `http://localhost:8088/user/profile-document/create-profile`;
     const data = profileDto;
     try {

@@ -9,6 +9,7 @@ export class CreatePostInterceptor implements NestInterceptor {
     const { body } = request;
 
     if (!body.post_detail.profile_user) {
+      console.log(body.post_detail.profile_user)
       body.post_detail.profile_user = request['email'];
     }
     return next.handle();

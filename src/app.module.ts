@@ -10,6 +10,7 @@ import { ApiGatewayUserModule } from './modules/services/users/api-user.module';
 import { JWTStrategy } from './common/strategies/jwt.strategy';
 import { ApiGatewayPostModule } from './modules/services/posts/api-post.module';
 import { ApiGatewayOrderModule } from './modules/services/orders/api-order.module';
+import { ApiGatewayChatModule } from './modules/services/chats/api-chat.module';
 
 @Module({
   imports: [
@@ -79,7 +80,8 @@ import { ApiGatewayOrderModule } from './modules/services/orders/api-order.modul
     ApiGatewayAuthModule,
     ApiGatewayUserModule,
     ApiGatewayPostModule,
-    ApiGatewayOrderModule
+    ApiGatewayOrderModule,
+    ApiGatewayChatModule
   ],
   controllers: [AppController],
   providers: [
