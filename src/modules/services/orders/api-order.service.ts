@@ -12,7 +12,7 @@ import { OrderDetailCustomerDto } from './order-dto/order-detail-customer.dto';
 
 //import { OrderCreatedEvent } from './order-created.event';
 
-const ipv4 = "192.168.111.111";
+const ipv4 = "192.168.88.247";
 @Injectable()
 export class    ApiGatewayOrderService {
   constructor(
@@ -67,8 +67,7 @@ export class    ApiGatewayOrderService {
         const url = `http://${ipv4}:8068/orders/create`; // check here
         const data = orderDto;
         try {
-            const response = await axios.post(url, data, 
-            );
+            const response = await axios.post(url, data);
         return response.data;
         } catch (error) {
             console.log(error);

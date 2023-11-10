@@ -14,7 +14,35 @@ import { ApiGatewayChatModule } from './modules/services/chats/api-chat.module';
 
 @Module({
   imports: [
-    // ClientsModule.register([
+    CacheModule.register({
+      isGlobal: true,
+      store: redisStore,
+      host: 'localhost',//localhost
+      port: 6379,//6379
+      // password: 'pqTtSGQM5oHvURGfFWaO7qWcTi3kcWr8',
+      ttl: 60*60*15, // seconds
+    }),
+    ApiGatewayModule,
+    ApiGatewayAuthModule,
+    ApiGatewayUserModule,
+    ApiGatewayPostModule,
+    ApiGatewayOrderModule,
+    //ApiGatewayChatModule
+  ],
+  controllers: [AppController],
+  providers: [
+    AppService,
+  ],
+})
+export class AppModule {
+}
+
+
+
+
+
+
+// ClientsModule.register([
     //   // {
     //   //   name: 'ORDER_SERVICE',
     //   //   transport: Transport.KAFKA,
@@ -67,61 +95,6 @@ import { ApiGatewayChatModule } from './modules/services/chats/api-chat.module';
     //   //   }
     //   // }
     //   // },
-    // ]),
-    CacheModule.register({
-      isGlobal: true,
-      store: redisStore,
-      host: 'localhost',//localhost
-      port: 6379,//6379
-      // password: 'pqTtSGQM5oHvURGfFWaO7qWcTi3kcWr8',
-      ttl: 60*60*15, // seconds
-    }),
-    ApiGatewayModule,
-    ApiGatewayAuthModule,
-    ApiGatewayUserModule,
-    ApiGatewayPostModule,
-    ApiGatewayOrderModule,
-    ApiGatewayChatModule
-  ],
-  controllers: [AppController],
-  providers: [
-    AppService,
-    // JWTStrategy,
-  ],
-})
-export class AppModule {
-}
-
-
-
-//   {
-    //     name: 'USER_SERVICE',
-    //     transport: Transport.KAFKA,
-    //     options: {
-    //       client: {
-    //         clientId: 'user',
-    //         brokers: ['localhost:9092'],
-    //       },
-    //       consumer: {
-    //         groupId: 'user-consumer'
-    //       }
-    //     }
-    //   },
-    //   {
-    
-    //   {
-    //   name: 'ORDER_SERVICE',
-    //   transport: Transport.KAFKA,
-    //   options: {
-    //     client: {
-    //       clientId: 'order',
-    //       brokers: ['localhost:9092'],
-    //     },
-    //     consumer: {
-    //       groupId: 'order-consumer'
-    //     }
-    //   }
-    //   },
     // ]),
     // CacheModule.register({
     //   isGlobal: true,

@@ -15,10 +15,10 @@ import { UserRoleGuard } from 'src/common/guards/user.role.guard';
         }),
     ],
     providers: [ 
-        RedisService, 
+        // RedisService, 
         ApiGatewayOrderService,
-        AdminRoleGuard,
-        UserRoleGuard,
+        // AdminRoleGuard,
+        // UserRoleGuard,
     ],
     controllers: [ApiGatewayOrderController]
 })
@@ -26,7 +26,7 @@ export class ApiGatewayOrderModule implements NestModule{
     configure(consumer: MiddlewareConsumer) {
     consumer
     .apply(AuthenticationMiddleware)
-   .exclude  ({path: '/order/:id/deposit', method: RequestMethod.POST })
+    .exclude  ({path: '/order/:id/deposit', method: RequestMethod.POST })
     .forRoutes(ApiGatewayOrderController);
   }
 }
