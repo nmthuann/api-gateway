@@ -32,6 +32,7 @@ export class ApiGatewayOrderController {
     @Post('create-order')
     // @UseInterceptors(CreateOrderInterceptor)
     async CreateOrder(@Request() req: any, @Body() getOrder: GetOrderDto): Promise<OrderDto>{
+        console.log(getOrder);
         const email = req['email'];
         getOrder.customer_id = email;
         console.log(getOrder);

@@ -31,6 +31,7 @@
     "@types/axios": "^0.14.0",
     "@types/cache-manager": "^4.0.2",
     "@types/cache-manager-redis-store": "^2.0.1",
+    "autocannon": "^7.11.0",
     "cache-manager": "^5.2.0",
     "cache-manager-redis-store": "2.0.0",
     "class-transformer": "^0.5.1",
