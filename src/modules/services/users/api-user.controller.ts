@@ -14,14 +14,14 @@ import {
   NestMiddleware,
   ValidationPipe
 } from '@nestjs/common'
-import { AccountPipeValidator } from 'src/common/pipes/account.validator.pipe'
+import { AccountPipeValidator } from 'src/pipes/account.validator.pipe'
 import { ApiGatewayUserService } from './api-user.service'
 import { RolesGuard } from 'src/guards/role.guard'
 import { CreateAccountUserDto } from '../auth/auth-dto/create-accountUser.dto'
-import { InformationPipeValidator } from 'src/common/pipes/user-service/create-information.validator.pipe'
+import { InformationPipeValidator } from 'src/pipes/create-information.validator.pipe'
 import { AuthorizationGuard } from 'src/guards/authorization.guard'
 import { CreateInformationDto } from './user-dto/create-information.dto'
-import { CreateInformationInterceptor } from 'src/common/interceptors/user-service/create-profile.interceptor'
+import { CreateInformationInterceptor } from 'src/interceptors/create-profile.interceptor'
 import { CreateProfileDto } from './user-dto/create-profile.dto'
 import { AdminRoleGuard } from 'src/guards/admin.role.guard'
 import { UserRoleGuard } from 'src/guards/user.role.guard'

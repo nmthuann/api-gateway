@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
-import { AuthenticationMiddleware } from 'src/common/middlewares/authentication.middleware'
+import { AuthenticationMiddleware } from 'src/middlewares/authentication.middleware'
 import { KafkaModule } from 'src/modules/kafka/kafka.module'
 import { RedisService } from 'src/modules/redis/redis.service'
 import { ApiGatewayPostController } from './api-post.controller'

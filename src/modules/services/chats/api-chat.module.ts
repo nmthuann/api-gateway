@@ -5,7 +5,7 @@ import { AdminRoleGuard } from 'src/guards/admin.role.guard'
 import { UserRoleGuard } from 'src/guards/user.role.guard'
 import { RolesGuard } from 'src/guards/role.guard'
 import { ApiGatewayChatController } from './api-chat.controller'
-import { AuthenticationMiddleware } from 'src/common/middlewares/authentication.middleware'
+import { AuthenticationMiddleware } from 'src/middlewares/authentication.middleware'
 
 @Module({
   imports: [

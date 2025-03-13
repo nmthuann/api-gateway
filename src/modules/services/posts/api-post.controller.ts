@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, UseGuards, UseInterceptors, Request, Param
 import { ApiGatewayPostService } from './api-post.service'
 import { PostDto } from './post-dto/post.dto'
 import { AuthorizationGuard } from 'src/guards/authorization.guard'
-import { CreatePostInterceptor } from 'src/common/interceptors/post-service/create-post.interceptor'
+import { CreatePostInterceptor } from 'src/interceptors/create-post.interceptor'
 import { RolesGuard } from 'src/guards/role.guard'
 import { AdminRoleGuard } from 'src/guards/admin.role.guard'
 import { UserRoleGuard } from 'src/guards/user.role.guard'

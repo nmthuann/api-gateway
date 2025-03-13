@@ -16,10 +16,10 @@ import {
   Res
 } from '@nestjs/common'
 import { Public } from 'src/decorators/public.decorator'
-import { ValidatorPipe } from 'src/common/pipes/validator.pipe'
+import { ValidatorPipe } from 'src/pipes/validator.pipe'
 import { AccountDto } from './auth-dto/account.dto'
 import { ApiGatewayAuthService } from '../auth/api-auth.service'
-import { AccountPipeValidator } from 'src/common/pipes/account.validator.pipe'
+import { AccountPipeValidator } from 'src/pipes/account.validator.pipe'
 import { RolesGuard } from 'src/guards/role.guard'
 import { Tokens } from 'src/modules/bases/types/token.type'
 // import {Response, NextFunction } from 'express';
