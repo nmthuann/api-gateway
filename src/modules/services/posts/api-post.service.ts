@@ -1,27 +1,22 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices/client';
-import { PostDto } from './post-dto/post.dto';
-import { ProducerService } from 'src/modules/kafka/producer.service';
-import { ConsumerService } from 'src/modules/kafka/consumer.service';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { Injectable } from '@nestjs/common';
+import { PostDto } from './dtos/post.dto';
 import axios from 'axios';
-import { CategoryDto } from './category-dto/category.dto';
+import { CategoryDto } from './dtos/category.dto';
 
 @Injectable()
 export class ApiGatewayPostService {
-  constructor(
-    // @Inject('POST_SERVICE') 
-    // private readonly postClient: ClientKafka,
-    // private consumerService: ConsumerService,
-  ){}
+  constructor() {}
+  // private consumerService: ConsumerService, // private readonly postClient: ClientKafka, // @Inject('POST_SERVICE')
 
-  async createPost(token: string, postDto: PostDto){
+  async createPost(token: string, postDto: PostDto) {
     const url = `http://localhost:8089/post/posts/create`;
     const data = postDto;
     try {
       const response = await axios.post(url, data, {
-         headers: {
-          'Authorization': `Bearer ${token}` 
-        }
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       return response.data;
     } catch (error) {
@@ -29,14 +24,18 @@ export class ApiGatewayPostService {
     }
   }
 
-  async updatePost(token: string, id: number, postDto: PostDto):Promise<PostDto>{
+  async updatePost(
+    token: string,
+    id: number,
+    postDto: PostDto,
+  ): Promise<PostDto> {
     const url = `http://localhost:8089/post/posts/update/${id}`;
     const data = postDto;
     try {
       const response = await axios.put(url, data, {
-         headers: {
-          'Authorization': `Bearer ${token}` 
-        }
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       return response.data;
     } catch (error) {
@@ -44,121 +43,25 @@ export class ApiGatewayPostService {
     }
   }
 
-  async getPosts(){ 
+  async getPosts() {
     const url = `http://localhost:8089/post/posts/get-posts`;
     try {
-      const response = await axios.get(url, 
-      //   {
-      //    headers: {
-      //     'Authorization': `Bearer ${token}` 
-      //   }
-      // }
-      );
+      const response = await axios.get(url);
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);
     }
   }
 
-
-  async getCategories(){ 
+  async getCategories() {
     const url = `http://localhost:8089/post/category/get-categories`;
     try {
-      const response = await axios.get(url, 
-      //   {
-      //    headers: {
-      //     'Authorization': `Bearer ${token}` 
-      //   }
-      // }
-      );
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response.data.message);
-    }
-  }
-
-
-  async createCategory(token: string, categoryDto: CategoryDto): Promise<CategoryDto>{ 
-    const url = `http://localhost:8089/post/category/create`;
-    try {
-      const response = await axios.post(url, categoryDto, {
-         headers: {
-          'Authorization': `Bearer ${token}` 
-        }
-      });
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response.data.message);
-    }
-  }
-
-
-  async updateCategoryById(token: string, id: number, categoryDto: CategoryDto): Promise<CategoryDto>{ 
-    const url = `http://localhost:8089/post/category/update/${id}`;
-    try {
-      const response = await axios.put(url, categoryDto, {
-         headers: {
-          'Authorization': `Bearer ${token}`   
-        }
-      });
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response.data.message);
-    }
-  }
-
-
-  async getCategoryById(token: string, id: number): Promise<CategoryDto>{ 
-    const url = `http://localhost:8089/post/category/${id}`;
-    try {
-      const response = await axios.get(url, {
-         headers: {
-          'Authorization': `Bearer ${token}` 
-        }
-      }
-      );
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response.data.message);
-    }
-  }
-
-  async getCategoryDetailsByCategoryId(id: number){ 
-    const url = `http://localhost:8089/post/category/category-detail-list/${id}`;
-    try {
-      const response = await axios.get(url,
-      //    {
-      //    headers: {
-      //     'Authorization': `Bearer ${token}` 
-      //   }
-      // }
-      );
-      return response.data[0].category_detail;
-    } catch (error) {
-      throw new Error(error.response.data.message);
-    }
-  }
-
-
-  async getPostsByCategoryDetailId(id: number){ 
-    const url = `http://localhost:8089/post/posts/get-posts/${id}`;
-    try {
-      const response = await axios.get(url,
-      );
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response.data.message);
-    }
-  }
-
-    async getCategoryDetails(){ 
-    const url = `http://localhost:8089/post/category-detail/CategoryDetails`;
-    try {
-      const response = await axios.get(url,
+      const response = await axios.get(
+        url,
         //   {
-        //     headers: {
-        //       'Authorization': `Bearer ${token}` 
-        //     }
+        //    headers: {
+        //     'Authorization': `Bearer ${token}`
+        //   }
         // }
       );
       return response.data;
@@ -167,8 +70,93 @@ export class ApiGatewayPostService {
     }
   }
 
+  async createCategory(
+    token: string,
+    categoryDto: CategoryDto,
+  ): Promise<CategoryDto> {
+    const url = `http://localhost:8089/post/category/create`;
+    try {
+      const response = await axios.post(url, categoryDto, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
+  }
 
-  async getPostById(id: number): Promise<PostDto>{ 
+  async updateCategoryById(
+    token: string,
+    id: number,
+    categoryDto: CategoryDto,
+  ): Promise<CategoryDto> {
+    const url = `http://localhost:8089/post/category/update/${id}`;
+    try {
+      const response = await axios.put(url, categoryDto, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
+  }
+
+  async getCategoryById(token: string, id: number): Promise<CategoryDto> {
+    const url = `http://localhost:8089/post/category/${id}`;
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
+  }
+
+  async getCategoryDetailsByCategoryId(id: number) {
+    const url = `http://localhost:8089/post/category/category-detail-list/${id}`;
+    try {
+      const response = await axios.get(
+        url,
+        //    {
+        //    headers: {
+        //     'Authorization': `Bearer ${token}`
+        //   }
+        // }
+      );
+      return response.data[0].category_detail;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
+  }
+
+  async getPostsByCategoryDetailId(id: number) {
+    const url = `http://localhost:8089/post/posts/get-posts/${id}`;
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
+  }
+
+  async getCategoryDetails() {
+    const url = `http://localhost:8089/post/category-detail/CategoryDetails`;
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message);
+    }
+  }
+
+  async getPostById(id: number): Promise<PostDto> {
     const url = `http://localhost:8089/post/posts/get-post/${id}`;
     try {
       const response = await axios.get(url);
@@ -178,21 +166,17 @@ export class ApiGatewayPostService {
     }
   }
 
-
-  async getPostByEmail(token: string): Promise<PostDto[]>{ 
+  async getPostByEmail(token: string): Promise<PostDto[]> {
     const url = `http://localhost:8089/post/posts/get-post-user`;
     try {
-      const response = await axios.get(url,
-        {
-         headers: {
-          'Authorization': `Bearer ${token}` 
-        }
-      }
-      );
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);
     }
   }
-
 }

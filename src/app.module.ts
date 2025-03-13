@@ -1,12 +1,12 @@
-import { CacheModule, Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
-import { ApiGatewayModule } from 'src/modules/api/api-gateway.module'
-import * as redisStore from 'cache-manager-redis-store'
-import { ApiGatewayAuthModule } from 'src/modules/services/auth/api-auth.module'
-import { ApiGatewayUserModule } from './modules/services/users/api-user.module'
-import { ApiGatewayPostModule } from './modules/services/posts/api-post.module'
-import { ApiGatewayOrderModule } from './modules/services/orders/api-order.module'
+import { CacheModule, Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { ApiGatewayModule } from 'src/modules/api/api-gateway.module';
+import * as redisStore from 'cache-manager-redis-store';
+import { ApiGatewayAuthModule } from 'src/modules/services/auth/api-auth.module';
+import { ApiGatewayUserModule } from './modules/services/users/api-user.module';
+import { ApiGatewayPostModule } from './modules/services/posts/api-post.module';
+import { ApiGatewayOrderModule } from './modules/services/orders/api-order.module';
 
 @Module({
   imports: [
@@ -16,17 +16,17 @@ import { ApiGatewayOrderModule } from './modules/services/orders/api-order.modul
       host: 'localhost', //localhost
       port: 6379, //6379
       // password: 'pqTtSGQM5oHvURGfFWaO7qWcTi3kcWr8',
-      ttl: 60 * 60 * 15 // seconds
+      ttl: 60 * 60 * 15, // seconds
     }),
     ApiGatewayModule,
     ApiGatewayAuthModule,
     ApiGatewayUserModule,
     ApiGatewayPostModule,
-    ApiGatewayOrderModule
+    ApiGatewayOrderModule,
     //ApiGatewayChatModule
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService],
 })
 export class AppModule {}
 

@@ -1,16 +1,17 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
-import { KafkaModule } from 'src/modules/kafka/kafka.module'
-import { ApiGatewayAuthService } from '../auth/api-auth.service'
-import { ApiGatewayAuthController } from './api-auth.controller'
-import { AuthenticationMiddleware } from 'src/middlewares/authentication.middleware'
-import { RedisService } from 'src/modules/redis/redis.service'
-import { JWTStrategy } from 'src/strategies/jwt.strategy'
-import { ClientsModule, Transport } from '@nestjs/microservices'
-import { JwtModule } from '@nestjs/jwt'
-import { APP_GUARD } from '@nestjs/core'
-import { AuthorizationGuard } from 'src/guards/authorization.guard'
-import { UserRoleGuard } from 'src/guards/user.role.guard'
-import { AdminRoleGuard } from 'src/guards/admin.role.guard'
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
+import { KafkaModule } from 'src/modules/kafka/kafka.module';
+import { ApiGatewayAuthService } from '../auth/api-auth.service';
+import { ApiGatewayAuthController } from './api-auth.controller';
+import { AuthenticationMiddleware } from 'src/middlewares/authentication.middleware';
+import { RedisService } from 'src/modules/redis/redis.service';
+import { JwtModule } from '@nestjs/jwt';
+import { UserRoleGuard } from 'src/guards/user.role.guard';
+import { AdminRoleGuard } from 'src/guards/admin.role.guard';
 @Module({
   imports: [
     // ClientsModule.register([
@@ -29,22 +30,22 @@ import { AdminRoleGuard } from 'src/guards/admin.role.guard'
     //   }]),
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: 60 }
+      signOptions: { expiresIn: 60 },
     }),
-    KafkaModule
+    KafkaModule,
   ],
   providers: [
     ApiGatewayAuthService,
     RedisService,
     UserRoleGuard,
-    AdminRoleGuard
+    AdminRoleGuard,
     // JWTStrategy,
     // {
     //   provide: APP_GUARD,
     //   useClass: AuthorizationGuard,
     // }
   ],
-  controllers: [ApiGatewayAuthController]
+  controllers: [ApiGatewayAuthController],
 })
 export class ApiGatewayAuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -52,9 +53,9 @@ export class ApiGatewayAuthModule implements NestModule {
       .apply(AuthenticationMiddleware)
       .exclude(
         { path: 'auth/login', method: RequestMethod.POST },
-        { path: 'auth/register', method: RequestMethod.POST }
+        { path: 'auth/register', method: RequestMethod.POST },
         // { path: 'auth/logout', method: RequestMethod.POST },
       )
-      .forRoutes(ApiGatewayAuthController)
+      .forRoutes(ApiGatewayAuthController);
   }
 }

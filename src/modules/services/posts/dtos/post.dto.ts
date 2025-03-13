@@ -1,7 +1,7 @@
-export class PackageDetailDto{
-    revision: string;
-    delivery_day: number;
-    unit_price: number;
+export class PackageDetailDto {
+  revision: string;
+  delivery_day: number;
+  unit_price: number;
 }
 
 export class PackageDto {
@@ -10,7 +10,7 @@ export class PackageDto {
   package_detail: PackageDetailDto;
 }
 
-export class PostDetailDto{
+export class PostDetailDto {
   profile_user: string;
   description: string;
   FAQ: string;

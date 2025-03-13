@@ -4,25 +4,16 @@ import {
   Body,
   UseGuards,
   Request,
-  ForbiddenException,
   UsePipes,
-  Get,
-  Param,
-  UseInterceptors,
   HttpCode,
   HttpStatus,
-  NestMiddleware,
-  ValidationPipe,
-  Res
-} from '@nestjs/common'
-import { Public } from 'src/decorators/public.decorator'
-import { ValidatorPipe } from 'src/pipes/validator.pipe'
-import { AccountDto } from './auth-dto/account.dto'
-import { ApiGatewayAuthService } from '../auth/api-auth.service'
-import { AccountPipeValidator } from 'src/pipes/account.validator.pipe'
-import { RolesGuard } from 'src/guards/role.guard'
-import { Tokens } from 'src/modules/bases/types/token.type'
-// import {Response, NextFunction } from 'express';
+} from '@nestjs/common';
+import { Public } from 'src/decorators/public.decorator';
+import { AccountDto } from './dtos/account.dto';
+import { ApiGatewayAuthService } from '../auth/api-auth.service';
+import { AccountPipeValidator } from 'src/pipes/account.validator.pipe';
+import { RolesGuard } from 'src/guards/role.guard';
+import { Tokens } from 'src/common/types/token.type';
 /**
  * 1. POST/auth/login -> login
  * 2. POST/auth/register -> register
@@ -36,31 +27,26 @@ export class ApiGatewayAuthController {
   @Public()
   @Post('login')
   @UsePipes(new AccountPipeValidator())
-  async login(@Body() loginDto: AccountDto): Promise<Tokens | any> {
-    console.log('Check account .... ', loginDto)
-    return await await this.apiGatewayAuthService.login(loginDto)
-    // if(result.message) {
-    //   return res.status(400).json({ message: result['message'] });
-    // }
-    // console.log(result);
-    // return result;
+  async login(@Body() loginDto: AccountDto): Promise<Tokens> {
+    console.log('Check account .... ', loginDto);
+    return await await this.apiGatewayAuthService.login(loginDto);
   }
 
   @Public()
   @Post('register')
   @UsePipes(new AccountPipeValidator())
   async register(@Body() accountDto: AccountDto) {
-    return await this.apiGatewayAuthService.register(accountDto)
+    return await this.apiGatewayAuthService.register(accountDto);
   }
 
   @UseGuards(RolesGuard)
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Request() req: any) {
-    const email = req['email']
-    const token = req['token']
-    await this.apiGatewayAuthService.logout(token, email)
-    return { message: 'Ban da dang xuat' }
+    const email = req['email'];
+    const token = req['token'];
+    await this.apiGatewayAuthService.logout(token, email);
+    return { message: 'Ban da dang xuat' };
   }
 }
 

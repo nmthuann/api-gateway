@@ -1,13 +1,20 @@
-import { Body, Controller, Get, Post, UseGuards, UseInterceptors, Request, Param, Put } from '@nestjs/common'
-import { ApiGatewayPostService } from './api-post.service'
-import { PostDto } from './post-dto/post.dto'
-import { AuthorizationGuard } from 'src/guards/authorization.guard'
-import { CreatePostInterceptor } from 'src/interceptors/create-post.interceptor'
-import { RolesGuard } from 'src/guards/role.guard'
-import { AdminRoleGuard } from 'src/guards/admin.role.guard'
-import { UserRoleGuard } from 'src/guards/user.role.guard'
-import { CategoryDto } from './category-dto/category.dto'
-import { Public } from 'src/decorators/public.decorator'
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  UseInterceptors,
+  Request,
+  Param,
+  Put,
+} from '@nestjs/common';
+import { ApiGatewayPostService } from './api-post.service';
+import { PostDto } from './dtos/post.dto';
+import { CreatePostInterceptor } from 'src/interceptors/create-post.interceptor';
+import { AdminRoleGuard } from 'src/guards/admin.role.guard';
+import { UserRoleGuard } from 'src/guards/user.role.guard';
+import { CategoryDto } from './dtos/category.dto';
 
 /**
  * 1. Create Post -> User
@@ -25,16 +32,19 @@ export class ApiGatewayPostController {
   @Post('create-post')
   @UseInterceptors(CreatePostInterceptor)
   async CreatePost(@Request() req: any, @Body() postDto: PostDto) {
-    const token = req['token']
-    return this.apiGatewayPostService.createPost(token, postDto)
+    const token = req['token'];
+    return this.apiGatewayPostService.createPost(token, postDto);
   }
 
   @UseGuards(UserRoleGuard)
   @Put('update-post/:id')
-  async updatePost(@Param('id') id: number, @Request() req: any, @Body() postDto: PostDto): Promise<PostDto> {
-    const token = req['token']
-    // const email = req['email'];
-    return this.apiGatewayPostService.updatePost(token, id, postDto)
+  async updatePost(
+    @Param('id') id: number,
+    @Request() req: any,
+    @Body() postDto: PostDto,
+  ): Promise<PostDto> {
+    const token = req['token'];
+    return this.apiGatewayPostService.updatePost(token, id, postDto);
   }
 
   // @Public()
@@ -42,7 +52,7 @@ export class ApiGatewayPostController {
   async getPosts() {
     //@Request() req: any
     // const token = req['token']
-    return await this.apiGatewayPostService.getPosts()
+    return await this.apiGatewayPostService.getPosts();
   }
 
   // @UseGuards(RolesGuard)
@@ -50,59 +60,67 @@ export class ApiGatewayPostController {
   async getCategory() {
     //@Request() req: any
     // const token = req['token']
-    return await this.apiGatewayPostService.getCategories()
+    return await this.apiGatewayPostService.getCategories();
   }
 
   @UseGuards(AdminRoleGuard)
   @Post('create-category')
   async createCategory(@Request() req: any, @Body() categoryDto: CategoryDto) {
-    const token = req['token']
-    return await this.apiGatewayPostService.createCategory(token, categoryDto)
+    const token = req['token'];
+    return await this.apiGatewayPostService.createCategory(token, categoryDto);
   }
 
   @UseGuards(AdminRoleGuard)
   @Post('update-category/:id')
-  async updateCategoryById(@Request() req: any, @Param('id') id: number, @Body() categoryDto: CategoryDto) {
-    const token = req['token']
-    return await this.apiGatewayPostService.updateCategoryById(token, id, categoryDto)
+  async updateCategoryById(
+    @Request() req: any,
+    @Param('id') id: number,
+    @Body() categoryDto: CategoryDto,
+  ) {
+    const token = req['token'];
+    return await this.apiGatewayPostService.updateCategoryById(
+      token,
+      id,
+      categoryDto,
+    );
   }
 
   @Get('get-category/:id')
   async getCategoryById(@Request() req: any, @Param('id') id: number) {
-    const token = req['token']
-    return await this.apiGatewayPostService.getCategoryById(token, id)
+    const token = req['token'];
+    return await this.apiGatewayPostService.getCategoryById(token, id);
   }
 
   @Get('category-detail-list/:id')
   async getCategoryDetailsByCategoryId(@Param('id') id: number) {
     // const token = req['token']
-    return await this.apiGatewayPostService.getCategoryDetailsByCategoryId(id)
+    return await this.apiGatewayPostService.getCategoryDetailsByCategoryId(id);
   }
 
   // @UseGuards(UserRoleGuard)
   @Get('get-category-details')
-  async getCategoryDetails(@Request() req: any) {
+  async getCategoryDetails() {
     //const token = req['token']
-    return await this.apiGatewayPostService.getCategoryDetails()
+    return await this.apiGatewayPostService.getCategoryDetails();
   }
 
   @Get('get-posts/:id')
   async getPostsByCategoryDetailId(@Param('id') id: number) {
     // const token = req['token']
-    return await this.apiGatewayPostService.getPostsByCategoryDetailId(id)
+    return await this.apiGatewayPostService.getPostsByCategoryDetailId(id);
   }
 
   @Get('get-post/:id')
   async getPostById(@Param('id') id: number) {
     // const token = req['token']
-    return await this.apiGatewayPostService.getPostById(id)
+    return await this.apiGatewayPostService.getPostById(id);
   }
 
   @UseGuards(UserRoleGuard)
   @Get('get-post-user')
   async getPostByEmail(@Request() req: any) {
-    const token = req['token']
-    return await this.apiGatewayPostService.getPostByEmail(token)
+    const token = req['token'];
+    return await this.apiGatewayPostService.getPostByEmail(token);
   }
 }
 
