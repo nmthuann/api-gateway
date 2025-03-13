@@ -1,37 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
-import { AxiosResponse } from 'axios';
-import { HttpService,  } from '@nestjs/axios';
+import { Injectable } from '@nestjs/common'
 
 @Injectable()
 export class AppService {
-  constructor(
-  // @Inject('AUTH_SERVICE') 
-  // private readonly authClient: ClientKafka,
-  // @Inject('USER_SERVICE') 
-  // private readonly userClient: ClientKafka,
-  // @Inject('POST_SERVICE') 
-  // private readonly postClient: ClientKafka,
-  // @Inject('ORDER_SERVICE') 
-  // private readonly orderClient: ClientKafka,
-
-  // private readonly httpService: HttpService
-  ){}
-
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor() {}
 
   getHello(): string {
-    return 'Hello World!';
+    return 'Hello World!'
   }
-
-  // createOrder({userId, price}: any){x
-  //   this.postClient.emit('', {})
-  // }
-
-  // createPost(token: string, data: CreatePostDto): Observable<AxiosResponse<any>> {
-  //   const headers = { Authorization: `Bearer ${token}` };
-  //   return this.httpService.post('/posts', data, { headers });
-  // }
-
-  
 }

@@ -1,16 +1,12 @@
 import { CacheModule, Module } from '@nestjs/common'
-import { ClientsModule, Transport } from '@nestjs/microservices'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-
-import { ApiGatewayModule } from 'src/modules/apis/api-gateway.module'
+import { ApiGatewayModule } from 'src/modules/api/api-gateway.module'
 import * as redisStore from 'cache-manager-redis-store'
 import { ApiGatewayAuthModule } from 'src/modules/services/auth/api-auth.module'
 import { ApiGatewayUserModule } from './modules/services/users/api-user.module'
-import { JWTStrategy } from './strategies/jwt.strategy'
 import { ApiGatewayPostModule } from './modules/services/posts/api-post.module'
 import { ApiGatewayOrderModule } from './modules/services/orders/api-order.module'
-import { ApiGatewayChatModule } from './modules/services/chats/api-chat.module'
 
 @Module({
   imports: [
